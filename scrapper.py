@@ -9,7 +9,6 @@ class EDHRECScrapper():
         self.url = url
         # Extrair o nome do comandante direto
         self.commander_name = self.extract_commander_name_from_url()
-        # Se não conseguir extrair o nome, paramos a execução, pq provavelmente a URL esta errada
         if not self.commander_name:
             print("ERRO: URL invalida ou não foi possivel extrair o nome do comandante")
             raise ValueError("URL inválida ou não foi possivel extrair o nome do comandante")

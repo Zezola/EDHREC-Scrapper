@@ -28,12 +28,14 @@ Esse comando vai insalar as dependencias que estão no requirements.txt
 pip install -r requirements.txt
 ```
 
-**Executar o Script**
+**Subir o servidor local**
 Rodar o comando
 ```bash
-python scrapper.py
+flask run
 ```
-
-## Resultado
-
-Após a execução você deve ter um arquivo cards.csv na pasta raiz do projeto
+## Como usar:
+Com o servidor rodando, você pode fazer chamadas POST na porta 5000 do seu ambiente de dev local.
+Um exemplo de chamada:
+```bash
+curl -X POST http://localhost:5000/deck -H "Content-Type: application/json" -d '{"url": "https://edhrec.com/commanders/nahiri-forged-in-fury"}'
+```
