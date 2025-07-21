@@ -6,6 +6,7 @@ em um arquivo .csv
 **Pré-requisitos**
 
 - Python3 instalado no computador. Caso não tenha, baixe em: [python.org](https://www.python.org/downloads/)
+- Docker instalado no computador. Caso não tenha, baixe em: [docker.com](https://docs.docker.com/get-started/get-docker/)
 
 **Como rodar o projeto**
 Clone esse repositório ou baixe o ZIP
@@ -15,27 +16,28 @@ Navegue até a pasta que usou pra baixar o projeto
 ```bash
 cd caminho/para/pasta
 ```
-
-**(Opcional, mas recomendado) Criar um ambiente virtual**
-Isso isola as dependencias do seu projeto e evita conflitos com outras bibliotecas
+**Montar o container a partir do Dockerfile**
 ```bash
-python -m venv venv
+sudo docker build -t web-scrapper-app .
 ```
 
-**Instalar Dependencias**
-Esse comando vai insalar as dependencias que estão no requirements.txt
+**Rodar o projeto na sua porta 5000 local**
 ```bash
-pip install -r requirements.txt
+docker run -i -d -p 5000:5000 --name mtg-scrapper web-scrapper-app
 ```
 
-**Subir o servidor local**
-Rodar o comando
-```bash
-flask run
-```
 ## Como usar:
 Com o servidor rodando, você pode fazer chamadas POST na porta 5000 do seu ambiente de dev local.
 Um exemplo de chamada:
 ```bash
 curl -X POST http://localhost:5000/deck -H "Content-Type: application/json" -d '{"url": "https://edhrec.com/commanders/nahiri-forged-in-fury"}'
+```
+**Vendo se o seu arquivo csv foi escrito**
+Com o container rodando, rode o comando
+```bash
+docker exec -it mtg-scrapper bash
+```
+Dentro do container, rode o comando para ver os conteudos da pasta decks_by_commander
+```bash
+ls decks_by_commander/
 ```
