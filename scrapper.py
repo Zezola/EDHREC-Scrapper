@@ -1,7 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import csv
-import os
 
 class EDHRECScrapper():
 
@@ -30,27 +28,6 @@ class EDHRECScrapper():
             # Captura qualquer erro inesperado
             print(f"Ocorreu um erro inesperado no processamento da string")
             return None
-
-    '''
-    Escreve no arquivo csv chamado cards.csv a partir de uma lista de nomes
-    '''
-    def write_to_csv(self, card_names: list) -> None:
-        # Se nao tiver uma lista de cartas, não salva no arquivo
-        if not card_names:
-            print("Aviso: Nenhuma carta foi encontrada para salvar")
-            return
-        # Caminho pra salvar o csv
-        directory = "decks_by_commander"
-        filepath = os.path.join(directory, f"{self.commander_name}.csv")
-        try:
-            with open(filepath, 'w', newline='') as csvfile:
-                fieldnames = ['Nome']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-                writer.writerows(card_names)
-            print(f"Sucesso! Deck salvo em {filepath}")
-        except (IOError, OSError) as e:
-            print(f"Erro ao escrever o arquivo '{filepath}:{e}")
 
     '''
     Faz uma requisição GET no EDHREC e faz um scrapping buscando as cartas por nome. Como é commander por enquanto não precisamos nos preocupar
