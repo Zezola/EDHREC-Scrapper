@@ -42,8 +42,8 @@ docker run \
    -p 9001:9001 \
    --name minio \
    -v ~/minio/data:/data \
-   -e "MINIO_ROOT_USER=ROOTNAME" \
-   -e "MINIO_ROOT_PASSWORD=CHANGEME123" \
+   -e "MINIO_ROOT_USER=minioadmin" \
+   -e "MINIO_ROOT_PASSWORD=minioadmin" \
    quay.io/minio/minio server /data --console-address ":9001"
 ```
 

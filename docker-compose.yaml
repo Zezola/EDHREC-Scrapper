@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Aplicacao Flask
+  app:
+    build: . # Constroi a imagem a partir de um Dockerfile no diretorio atual
+    ports:
+      - "5000:5000" # Mapeia a porta 5000 do container para 5000 da sua maquina
+    environment:
+      - MINIO_HOST=minio # Variavel de ambiente pra encontrar o host do Minio
+    volumes:
+      - ./decks_by_commander:/app/decks_by_commander # Mapeia a pasta local pra conversar com a pasta que tem dentro do container
+    depends_on:
+      - minio # Diz pro Container que esse serviço depende do Minio e tem que esperar ele rodar
+  
+  # Servico do Minio
+  minio:
+    image: quay.io/minio/minio:latest # Usa a imagem oficial do Minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data # Cria um volume pra persistir dados do Minio
+    command: server /data --console-address ":9001"
+
+# Define os volumes que serão gerenciados pelo Docker
+volumes:
+  minio_data:

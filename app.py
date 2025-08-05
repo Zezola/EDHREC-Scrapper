@@ -80,4 +80,8 @@ def save_csv_in_bucket():
     except Exception as e:
         print(f"Erro ao salvar arquivo no bucket: {e}")
         return jsonify({"erro": f"Nao foi possivel escrever no bucket minio. "}), 500
-        
+
+@app.route("/deck/download_csv/<commander_name>")
+def download_csv_by_commander_name(commander_name):
+    # Mostra o commander name
+    return f"Commander name {commander_name}"
