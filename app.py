@@ -3,9 +3,12 @@ from minio import Minio
 app = Flask(__name__)
 from scrapper import EDHRECScrapper
 from utils.csv_handler import CSVHandler
+from utils.text_handler import TextHandler
+import os
 
+minio_host = os.getenv("MINIO_HOST", "localhost")
 '''Criar o minioclient assim que rodamos o app'''
-client = Minio("localhost:9000",
+client = Minio(f"{minio_host}:9000",
         access_key="minioadmin",
         secret_key="minioadmin",
         secure=False
@@ -67,7 +70,7 @@ def save_csv_in_bucket():
     filepath = csv_handler.find_file_by_commander_name(commander_name=commander_name)
 
     if not filepath:
-        return jsonify({"erro": f"Nao foi encontrado nenhum deck para {commander_name}."}), 404
+        return jsonify({"erro": f"Nao foi encontrado nenhum CSV de cartas para {commander_name}."}), 404
     
     try:    
         client.fput_object(
@@ -81,7 +84,15 @@ def save_csv_in_bucket():
         print(f"Erro ao salvar arquivo no bucket: {e}")
         return jsonify({"erro": f"Nao foi possivel escrever no bucket minio. "}), 500
 
-@app.route("/deck/download_csv/<commander_name>")
+@app.route("/deck/csv/download/<commander_name>") #TODO: Normalizar o commander_name e procurar no Minio por alguma seleção que tenha esse commander
 def download_csv_by_commander_name(commander_name):
-    # Mostra o commander name
+    # O commander name sempre tem que estar no formato nome-comandante
+    print("Commander Name : ", commander_name)
+    # Procurar no bucket se já foi feito scrapping de algum deck com esse comandante. Se foi feito, o nome deve estar no bucket
+    # Se nao foi feito, retornar um status 404 e uma mensagem de que ainda não foi feito o scrapping desse commander
+    commander_scrapped = client.fget_object(bucket_name='jose-ulisses-bucket', object_name=f"{commander_name}.csv", file_path=f'jose-ulisses-bucket/{commander_name}')
+    if not commander_scrapped:
+        return jsonify({"erro": f"Ainda não foi feito o scrapping das cartas pro comandante {commander_name}"})
+    # Se foi feito, fazer download do csv
+    print("TEM O BIXO LA")
     return f"Commander name {commander_name}"
